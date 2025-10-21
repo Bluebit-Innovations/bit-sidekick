@@ -1,0 +1,6 @@
+include README.md
+include LICENSE
+include pyproject.toml
+recursive-include bit_sidekick *.py
+recursive-include examples *.yml *.yaml *.md
+recursive-include tests *.py

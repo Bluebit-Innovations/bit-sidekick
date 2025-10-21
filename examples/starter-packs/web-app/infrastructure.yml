@@ -1,0 +1,56 @@
+name: web-app-starter
+version: 1.0.0
+description: Basic web application infrastructure starter pack
+
+infrastructure:
+  compute:
+    type: container
+    image: nginx:latest
+    replicas: 2
+    resources:
+      cpu: 1
+      memory: 2Gi
+
+  database:
+    type: postgresql
+    version: "14"
+    storage: 20Gi
+    backup_enabled: true
+
+  cache:
+    type: redis
+    version: "7"
+    memory: 1Gi
+
+  storage:
+    type: object-storage
+    capacity: 100Gi
+    encryption: false
+
+  networking:
+    load_balancer:
+      type: application
+      ports:
+        - 80
+        - 443
+    
+services:
+  web:
+    name: web-application
+    port: 80
+    health_check: /health
+    
+  api:
+    name: api-service
+    port: 8080
+    health_check: /api/health
+
+monitoring:
+  enabled: false
+  metrics:
+    - cpu
+    - memory
+    
+logging:
+  enabled: false
+  retention_days: 7
