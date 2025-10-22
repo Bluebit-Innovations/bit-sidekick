@@ -1,143 +1,207 @@
-# 🧠 Bit-Block Sidekick  
-### Your Intelligent DevOps, SRE, and Cloud Automation Companion
+# Bit-Block Sidekick
 
-**Bit-Block Sidekick** is a lightweight, domain-aware AI agent designed to turn your **Bit-Block Starter Packs** into **self-running, self-auditing, and self-healing systems**.
+The Bit-Block Sidekick is a lightweight, domain-aware AI agent built to help startups, engineers, and DevOps teams hit the ground running with secure, self-auditing, and auto-configuring infrastructure.
 
-Instead of starting from static templates, teams can bootstrap their infrastructure with an intelligent Sidekick that **analyzes**, **suggests**, and **automates** best practices across Terraform, Kubernetes, CI/CD, and observability stacks.
+Unlike static templates or boilerplate repositories, the Sidekick transforms your Bit-Block Starter Packs into living, thinking systems — capable of analyzing, optimizing, and maintaining your cloud environments with minimal human input.
 
----
+## Features
 
-## 🚀 Features
+🤖 **Domain-Aware AI Agent**: Intelligent understanding of infrastructure patterns and best practices
 
-- **🔍 Secure Smart Audit**  
-  Scans your repo for missing guardrails (NetworkPolicies, IAM boundaries, PDBs, branch protections) and opens pull requests with fixes.
+🔒 **Self-Auditing**: Automatic security and compliance checks with actionable recommendations
 
-- **🏗️ Domain Packs**  
-  Pre-tuned best practices for **SaaS APIs**, **AI/ML workloads**, **FinTech**, and **Data/ETL pipelines**.
+⚙️ **Auto-Configuration**: Smart configuration for different environments (dev, staging, prod)
 
-- **🧩 Rego-Based Guardrails**  
-  Runs OPA/Conftest policy checks before any change is applied to ensure every modification passes security and compliance gates.
+📊 **Infrastructure Analysis**: Deep analysis of starter packs with optimization suggestions
 
-- **💬 Chat-Driven Assistance**  
-  Ask the Sidekick questions directly from your CLI — it explains “why” and “how” using your repo context.
+🚀 **Living, Thinking Systems**: Transforms static configurations into adaptive infrastructure
 
-- **📈 Observability Hooks**  
-  Monitors Prometheus metrics or GitHub Actions logs for anomalies and posts remediation suggestions or auto-generated runbooks.
+🛡️ **Security First**: Built-in security checks, encryption recommendations, and access control validation
 
----
-
-## ⚙️ Quickstart
-
-### 1️⃣ Initialize for your domain
-```bash
-bb-sidekick init --domain saas_api
-````
-
-### 2️⃣ Run an audit and open a PR with improvements
+## Installation
 
 ```bash
-bb-sidekick audit --open-pr
+pip install -e .
 ```
 
-### 3️⃣ Ask contextual questions
+Or with development dependencies:
 
 ```bash
-bb-sidekick ask "How do I add a staging namespace securely?"
+pip install -e ".[dev]"
 ```
 
----
+## Quick Start
 
-## 🧩 GitHub Action Integration
+### 1. Analyze a Starter Pack
 
-Add the following workflow to automate weekly audits and PR reviews:
+```bash
+bit-sidekick analyze examples/starter-packs/web-app/infrastructure.yml
+```
+
+### 2. Auto-Configure for an Environment
+
+```bash
+bit-sidekick configure examples/starter-packs/web-app/infrastructure.yml --environment prod
+```
+
+### 3. Audit Your Infrastructure
+
+```bash
+bit-sidekick audit examples/starter-packs/web-app/infrastructure.yml
+```
+
+### 4. Complete Transformation
+
+Transform your starter pack into a living, thinking system:
+
+```bash
+bit-sidekick transform examples/starter-packs/web-app/infrastructure.yml --environment prod
+```
+
+## Usage
+
+### Command-Line Interface
+
+The Sidekick provides a comprehensive CLI for all operations:
+
+```bash
+# Show help
+bit-sidekick --help
+
+# Analyze infrastructure
+bit-sidekick analyze <path>
+
+# Configure for environment
+bit-sidekick configure <path> --environment [dev|staging|prod]
+
+# Run security audit
+bit-sidekick audit <path>
+
+# Optimize infrastructure
+bit-sidekick optimize <path>
+
+# Complete transformation
+bit-sidekick transform <path> --environment [dev|staging|prod]
+```
+
+### Python API
+
+You can also use the Sidekick programmatically:
+
+```python
+from bit_sidekick import SidekickAgent, SidekickConfig
+
+# Initialize the agent
+agent = SidekickAgent()
+
+# Analyze a starter pack
+analysis = agent.analyze_infrastructure("path/to/starter-pack.yml")
+
+# Auto-configure for production
+config = agent.auto_configure("path/to/starter-pack.yml", "prod")
+
+# Run security audit
+audit = agent.self_audit("path/to/starter-pack.yml")
+
+# Complete transformation
+result = agent.transform_starter_pack("path/to/starter-pack.yml", "prod")
+```
+
+## Configuration
+
+Create a `sidekick-config.yml` file to customize behavior:
 
 ```yaml
-# .github/workflows/sidekick.yml
-name: Bit-Block Sidekick
+agent:
+  name: "My Sidekick"
+  domain_awareness: true
+  auto_configure: true
+  self_audit: true
 
-on:
-  workflow_dispatch:
-  schedule:
-    - cron: "0 3 * * 1"   # Every Monday 3 AM UTC
-  pull_request:
+analysis:
+  enabled: true
+  security_checks: true
+  optimization_checks: true
+  compliance_checks: true
 
-jobs:
-  run:
-    permissions:
-      contents: write
-      pull-requests: write
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - name: Install CLIs
-        run: |
-          sudo apt-get update && sudo apt-get install -y conftest
-          curl -fsSL https://get.terraform.io | sh || true
-          curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl && chmod +x kubectl && sudo mv kubectl /usr/local/bin/
-      - name: Run Sidekick Audit
-        run: python bitblocks-sidekick/agents/planner.py --audit --pr
-      - name: Policy Check
-        run: conftest test -p bitblocks-sidekick/policies/rego .
+automation:
+  auto_fix: false
+  require_approval: true
+  dry_run: true
+
+cloud:
+  providers:
+    - aws
+    - azure
+    - gcp
 ```
 
----
+Then use it with:
 
-## 🔐 Built-In Safety
+```bash
+bit-sidekick --config sidekick-config.yml transform <path>
+```
 
-* ✅ **Read-Only by Default** — Sidekick never applies directly to production.
-* ✅ **Policy-Gated PRs** — All changes are validated via Rego/OPA guardrails.
-* ✅ **Human-Approved Merges** — PRs require authorized reviewers.
-* ✅ **No Direct Writes** — Everything flows through GitOps or pull requests.
+## Starter Pack Examples
 
----
+The repository includes example starter packs:
 
-## 🧱 Supported Domain Packs
+- **web-app**: Basic web application infrastructure
+- **microservices**: Microservices architecture with service mesh
+- **data-platform**: Data processing and analytics platform
 
-| Domain           | Description                           | Key Capabilities                                                |
-| ---------------- | ------------------------------------- | --------------------------------------------------------------- |
-| **SaaS API**     | Web/API backends and microservices    | Auto-adds NetworkPolicies, HPAs, health checks, and rate limits |
-| **AI/ML App**    | GPU-based inference or model training | Resource guards, cost control, cache optimization               |
-| **FinTech-Lite** | Payment and compliance apps           | TLS enforcement, secrets rotation, PCI-lean policies            |
-| **Data/ETL**     | Pipelines and batch jobs              | DLQ setup, retry policies, lifecycle management                 |
+Explore them in `examples/starter-packs/`.
 
----
+## Development
 
-## 💡 Philosophy
+### Setup
 
-> *Move fast, but never break your cloud.*
+```bash
+# Clone the repository
+git clone https://github.com/Bluebit-Innovations/bit-sidekick.git
+cd bit-sidekick
 
-Bit-Block Sidekick empowers startups and engineers to launch faster, safer, and smarter — with production-grade security and reliability from day one.
+# Install in development mode
+pip install -e ".[dev]"
+```
 
----
+### Running Tests
 
-## 🧰 Stack Highlights
+```bash
+pytest tests/
+```
 
-* **Language:** Python 3.11+
-* **Policies:** OPA / Conftest (Rego)
-* **Infra Support:** Terraform, Kubernetes
-* **Observability:** Prometheus / Grafana
-* **CI/CD:** GitHub Actions / GitLab
-* **Security:** IAM Boundary / Policy Linter / NetworkPolicy Generator
+### Code Formatting
 
----
+```bash
+black bit_sidekick/
+```
 
-## 🌍 Learn More
+### Type Checking
 
-**Website:** [https://bluebit.live](https://bluebit.live)
-**Docs:** Coming soon → `docs/bitblock-sidekick.md`
-**Made by:** [Bluebit Information Technology Services](https://bluebit.live)
+```bash
+mypy bit_sidekick/
+```
 
----
+## Architecture
 
-### 📜 License
+The Sidekick is built on three core modules:
 
-This project is part of the **Bit-Block Starter Suite** by **Bluebit IT Services**.
-All rights reserved © 2025 Bluebit Information Technology Services.
+1. **Analyzer**: Analyzes infrastructure configurations and generates insights
+2. **Configurator**: Auto-configures infrastructure for different environments
+3. **Auditor**: Performs security and optimization audits
 
----
+These modules work together through the main `SidekickAgent` to provide a complete infrastructure management solution.
 
+## Contributing
 
+Contributions are welcome! Please feel free to submit a Pull Request.
 
+## License
+
+MIT License - see LICENSE file for details.
+
+## Support
+
+For issues, questions, or contributions, please visit:
+https://github.com/Bluebit-Innovations/bit-sidekick

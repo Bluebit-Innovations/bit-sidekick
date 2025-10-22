@@ -1,0 +1,64 @@
+name: data-platform-starter
+version: 1.0.0
+description: Data processing and analytics platform starter pack
+
+infrastructure:
+  compute:
+    type: spark-cluster
+    workers: 5
+    worker_size: large
+    
+  storage:
+    data_lake:
+      type: s3
+      capacity: 1000Gi
+      lifecycle_policies: true
+      
+    warehouse:
+      type: snowflake
+      capacity: medium
+      
+  processing:
+    batch:
+      type: airflow
+      workers: 3
+      
+    streaming:
+      type: kafka
+      partitions: 10
+      replication: 3
+
+resources:
+  raw_data_ingestion:
+    type: data-pipeline
+    source: external-api
+    destination: data_lake
+    schedule: "*/15 * * * *"
+    
+  data_transformation:
+    type: spark-job
+    input: data_lake/raw
+    output: data_lake/processed
+    schedule: "0 2 * * *"
+    
+  analytics_pipeline:
+    type: etl
+    source: data_lake/processed
+    destination: warehouse
+    schedule: "0 4 * * *"
+
+monitoring:
+  enabled: true
+  metrics:
+    - job_duration
+    - data_volume
+    - error_rate
+    
+  alerts:
+    - pipeline_failure
+    - data_quality_issues
+    
+security:
+  encryption_at_rest: true
+  encryption_in_transit: true
+  access_logging: true

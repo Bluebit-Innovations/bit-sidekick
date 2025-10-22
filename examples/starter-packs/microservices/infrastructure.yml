@@ -1,0 +1,68 @@
+name: microservices-starter
+version: 1.0.0
+description: Microservices architecture starter pack
+
+infrastructure:
+  compute:
+    type: kubernetes
+    cluster_size: 3
+    
+  service_mesh:
+    type: istio
+    enabled: true
+    
+  api_gateway:
+    type: kong
+    enabled: true
+
+services:
+  user_service:
+    name: user-service
+    replicas: 2
+    port: 8081
+    database:
+      type: postgresql
+      name: users_db
+    
+  order_service:
+    name: order-service
+    replicas: 3
+    port: 8082
+    database:
+      type: postgresql
+      name: orders_db
+      
+  inventory_service:
+    name: inventory-service
+    replicas: 2
+    port: 8083
+    database:
+      type: postgresql
+      name: inventory_db
+      
+  notification_service:
+    name: notification-service
+    replicas: 1
+    port: 8084
+    messaging:
+      type: rabbitmq
+      
+messaging:
+  type: rabbitmq
+  queues:
+    - order_events
+    - notification_events
+
+monitoring:
+  enabled: true
+  tracing: true
+  metrics:
+    - cpu
+    - memory
+    - requests
+    - latency
+    
+logging:
+  enabled: true
+  centralized: true
+  retention_days: 30
